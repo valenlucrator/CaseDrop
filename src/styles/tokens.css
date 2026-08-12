@@ -1,0 +1,71 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------
+   Design tokens — lifted from the mockup (exact hexes, not approx).
+   Tailwind v4 is CSS-first: @theme generates the utilities, so
+   `bg-surface-1` and `var(--color-surface-1)` both work.
+   --------------------------------------------------------------- */
+@theme {
+  --color-surface-0: #0b0c0d; /* page background */
+  --color-surface-1: #15171a; /* cards */
+  --color-surface-2: #1b1e21; /* raised / track */
+  --color-surface-3: #1d2126; /* pressed / avatar */
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-border-strong: rgba(255, 255, 255, 0.1);
+
+  --color-text-primary: #ecedee;
+  --color-text-body: #d3d6d9;
+  --color-text-secondary: #8a9099;
+  --color-text-muted: #7a828b;
+  --color-text-faint: #565c63;
+
+  --color-accent: #4c8df6; /* the player's own data */
+  --color-accent-press: #3e7bdd;
+  --color-win: #63b37f;
+  --color-loss: #d2665f;
+  --color-diverge: #d3a05b;
+
+  --color-action: #ecedee; /* white fill = primary action */
+  --color-action-press: #c9cbce;
+
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-body: 'Instrument Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --radius-card: 14px;
+  --radius-lg: 20px;
+}
+
+@layer base {
+  html {
+    background: var(--color-surface-0);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-surface-0);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+  }
+
+  /* The play flow commits irreversibly; stray text selection reads as a bug. */
+  button {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+}
+
+@utility meta {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 10.5px;
+  line-height: 1;
+  letter-spacing: 0.16em;
+}
+
+@utility safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}

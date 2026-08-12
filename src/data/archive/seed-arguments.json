@@ -1,0 +1,122 @@
+[
+  {
+    "id": "001-a1",
+    "caseId": "001",
+    "side": "a",
+    "evidenceSeen": ["D", "E"],
+    "author": "Soren",
+    "quality": "sharp",
+    "strength": 0.74,
+    "text": "She searched \"do I have to give it back\" on the 12th. That is not the behaviour of someone who believes the money is hers — it is the behaviour of someone checking whether anyone will come for it. Whatever her belief was on the 4th, it was gone by the 12th, and the demand on the 5th of May went unanswered anyway."
+  },
+  {
+    "id": "001-a2",
+    "caseId": "001",
+    "side": "a",
+    "evidenceSeen": ["B", "D"],
+    "author": "Yusra",
+    "quality": "generic",
+    "strength": 0.44,
+    "text": "The money was never hers. She spent it in three days and ignored a written demand to return it. People cannot keep what arrives in their account by accident simply because the sender was slow to notice. The charge is proportionate and the facts are not really in dispute."
+  },
+  {
+    "id": "001-b1",
+    "caseId": "001",
+    "side": "b",
+    "evidenceSeen": ["A", "C"],
+    "author": "Devrim",
+    "quality": "sharp",
+    "strength": 0.71,
+    "text": "She asked. She was told it was hers. Corvid's own clause 9.2 told her the same thing in writing — no action required, we claw it back ourselves. §31 forgives an honest belief even when it is a foolish one, and a belief formed from the company's answer and the company's policy is not foolish. This is a debt Corvid failed to collect."
+  },
+  {
+    "id": "001-b2",
+    "caseId": "001",
+    "side": "b",
+    "evidenceSeen": ["A", "E"],
+    "author": "Noor",
+    "quality": "flawed",
+    "strength": 0.38,
+    "text": "Corvid took a month to notice their own error and now want the state to fix it for them. She asked support and got an answer. If a company issues a manual refund outside its own reconciliation process, that is a failure of their systems, and the criminal law is not a debt collection service for badly run businesses."
+  },
+  {
+    "id": "002-a1",
+    "caseId": "002",
+    "side": "a",
+    "evidenceSeen": ["C", "D"],
+    "author": "Marisol",
+    "quality": "sharp",
+    "strength": 0.76,
+    "text": "A supervisor told riders to finish their bags after logout, in Pellham's own channel, on Pellham's own servers. Thirty-one per cent of the fleet's deliveries are scanned logged out. §12 asks whether the employer knew or benefited — Pellham did both, and saved 4.10 credits on the parcel he was carrying when the car hit him."
+  },
+  {
+    "id": "002-a2",
+    "caseId": "002",
+    "side": "a",
+    "evidenceSeen": ["A", "C"],
+    "author": "Ked",
+    "quality": "generic",
+    "strength": 0.46,
+    "text": "He was doing the job when he was hurt. He had company parcels in his bag and he was taking them to company customers. Whether an app said he was on or off does not change what he was actually doing at 19:00 on Farrow Road, and the supervisor had told them all to do exactly that."
+  },
+  {
+    "id": "002-b1",
+    "caseId": "002",
+    "side": "b",
+    "evidenceSeen": ["B", "E"],
+    "author": "Halvard",
+    "quality": "sharp",
+    "strength": 0.69,
+    "text": "He signed 4.4. He logged out. Then he told the hospital nobody made him do it and that he was protecting his Saturday. The Act extends cover to work the employer tolerated, not to every errand a worker chooses to run with company property in the bag. He drew the boundary himself at 18:42 and then crossed it for his own reasons."
+  },
+  {
+    "id": "002-b2",
+    "caseId": "002",
+    "side": "b",
+    "evidenceSeen": ["A", "B"],
+    "author": "Ines",
+    "quality": "flawed",
+    "strength": 0.35,
+    "text": "The handbook could not be clearer. Section 4.4 says he is not covered when logged out, and he was logged out. He signed for it on his first day. A written term that a worker has signed cannot simply be set aside because he found it inconvenient on the night."
+  },
+  {
+    "id": "003-a1",
+    "caseId": "003",
+    "side": "a",
+    "evidenceSeen": ["D", "C"],
+    "author": "Teodora",
+    "quality": "sharp",
+    "strength": 0.78,
+    "text": "Six files were about the invoices. He took 241, including salary bands and colleagues' unredacted contracts. §7 protects access that goes no further than the concern required, and that is where he loses — not on the door, on the drive. Sending only six afterwards does not un-copy the other 235."
+  },
+  {
+    "id": "003-a2",
+    "caseId": "003",
+    "side": "a",
+    "evidenceSeen": ["A", "B"],
+    "author": "Brannt",
+    "quality": "generic",
+    "strength": 0.42,
+    "text": "He was dismissed on the 3rd and entered on the 19th at two in the morning. He knew he did not work there. A card that still opens a door is an administrative failure, not an invitation, and the statute says as much. Entering a building you have been dismissed from, at night, to copy files is the offence as written."
+  },
+  {
+    "id": "003-b1",
+    "caseId": "003",
+    "side": "b",
+    "evidenceSeen": ["E", "C"],
+    "author": "Amaia",
+    "quality": "sharp",
+    "strength": 0.72,
+    "text": "They told him to use the audit line. The audit line went to the CFO who signed the invoices he was questioning, and that office closed all three reports it ever received. A channel that reports you to the person you are reporting is not a lawful means — it is a filter. Once E is on the table, the defence is live."
+  },
+  {
+    "id": "003-b2",
+    "caseId": "003",
+    "side": "b",
+    "evidenceSeen": ["B", "E"],
+    "author": "Reyes",
+    "quality": "flawed",
+    "strength": 0.36,
+    "text": "Vantor knew its deprovisioning did not work — they had put it in the IT budget. They left a working card with a man they had sacked and then acted surprised. If the company cannot be bothered to close its own door, it should not be asking prosecutors to treat walking through it as a crime."
+  }
+]
