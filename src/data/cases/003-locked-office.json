@@ -2,13 +2,26 @@
   "id": "003",
   "slug": "locked-office",
   "title": "The Locked Office",
-  "tags": ["Unauthorized Access", "Evidence", "Intent"],
+  "tags": [
+    "Unauthorized Access",
+    "Evidence",
+    "Intent"
+  ],
+  "concepts": [
+    "authorisation",
+    "whistleblower-protection",
+    "proportionality",
+    "defence"
+  ],
   "difficulty": 3,
   "estimatedMinutes": 3,
   "jurisdictionRule": "Under §7 of the Premises and Systems Act of Aldren, a person commits unauthorized access if they enter premises or systems knowing that permission has been withdrawn. A working credential is evidence that permission subsists, but is not conclusive. It is a defence that the access was undertaken to expose unlawful conduct, provided that no adequate lawful means of raising the concern was available, and that the access went no further than the concern required.",
   "scenario": "Ilan Recke was dismissed from Vantor Systems on 3 March. On the night of 19 March he entered Vantor's third floor using the access card he had been issued eighteen months earlier, which still worked.\n\nHe was inside for forty-eight minutes. He copied files to a personal drive and left. Two days later he sent a package of documents to a financial journalist, together with a note alleging that Vantor had been invoicing a client for work never performed.\n\nVantor's building system had been flagged for replacement in the previous quarter's IT budget, on the grounds that deprovisioning was manual and unreliable. The replacement had not been funded.\n\nVantor discovered the entry during an unrelated audit five weeks later and went to prosecutors. Recke has not denied entering. His position is that he had raised the invoices internally before he was dismissed, got nowhere, and had no way left to be heard.\n\nThe journalist has not published. Vantor's client has since terminated the contract.",
   "question": "Should prosecutors pursue criminal charges?",
-  "options": { "a": "Prosecute", "b": "Do not prosecute" },
+  "options": {
+    "a": "Prosecute",
+    "b": "Do not prosecute"
+  },
   "evidence": [
     {
       "id": "A",
@@ -17,7 +30,16 @@
       "body": "Badge 4471 — entry 02:14, exit 03:02. No other credential was used on the floor that night. The badge had been used on eleven prior occasions after 01:00 during Recke's employment, all of them logged against active project work.",
       "favors": "neutral",
       "weight": 1,
-      "keyTerms": ["log", "badge", "02:14", "entry", "night", "hour", "4471", "eleven"]
+      "keyTerms": [
+        "log",
+        "badge",
+        "02:14",
+        "entry",
+        "night",
+        "hour",
+        "4471",
+        "eleven"
+      ]
     },
     {
       "id": "B",
@@ -26,7 +48,15 @@
       "body": "HR to IT: \"Recke leaves us today. Revoke all building and system access, effective immediately.\" The ticket was opened and auto-closed nine days later, unactioned, under a rule that clears tickets idle for a week. Nobody told Recke either way.",
       "favors": "a",
       "weight": 2,
-      "keyTerms": ["termination", "email", "revoke", "withdrawn", "permission", "hr", "effective immediately"]
+      "keyTerms": [
+        "termination",
+        "email",
+        "revoke",
+        "withdrawn",
+        "permission",
+        "hr",
+        "effective immediately"
+      ]
     },
     {
       "id": "C",
@@ -35,7 +65,15 @@
       "body": "\"Raised concerns re: Calder account invoicing. Advised to put it in writing to the audit line. Declined to give detail today. Handed in laptop and lanyard. No card returned — noted, to follow up.\" The follow-up box is unticked.",
       "favors": "a",
       "weight": 2,
-      "keyTerms": ["exit interview", "audit line", "advised", "lawful means", "raise", "writing", "hr"]
+      "keyTerms": [
+        "exit interview",
+        "audit line",
+        "advised",
+        "lawful means",
+        "raise",
+        "writing",
+        "hr"
+      ]
     },
     {
       "id": "D",
@@ -44,7 +82,17 @@
       "body": "241 files. Six relate to the Calder account and its invoicing. The remaining 235 comprise the full client list, two years of salary bands, and the unredacted contracts of nine current employees. Only the six were sent to the journalist.",
       "favors": "a",
       "weight": 2,
-      "keyTerms": ["241", "files", "client list", "salary", "went further", "proportion", "beyond", "scope", "six"]
+      "keyTerms": [
+        "241",
+        "files",
+        "client list",
+        "salary",
+        "went further",
+        "proportion",
+        "beyond",
+        "scope",
+        "six"
+      ]
     },
     {
       "id": "E",
@@ -53,7 +101,15 @@
       "body": "The audit line inbox was routed, from its creation, to the office of the Chief Financial Officer. The CFO signed every Calder invoice Recke had questioned. Three reports were received in six months; all three were closed by that office without external referral.",
       "favors": "b",
       "weight": 2,
-      "keyTerms": ["audit line", "cfo", "routed", "no lawful means", "compromised", "closed", "inadequate"]
+      "keyTerms": [
+        "audit line",
+        "cfo",
+        "routed",
+        "no lawful means",
+        "compromised",
+        "closed",
+        "inadequate"
+      ]
     }
   ],
   "selectCount": 2,
@@ -87,5 +143,7 @@
     ],
     "reasoning": "The defence is genuinely available here, and evidence E is the reason: an audit line answering to the person under suspicion is not a lawful means in any sense that matters, and a player who finds E has found the strongest thing Recke has. But §7 attaches a second condition to the defence, and that is where the case turns. The access must go no further than the concern required. Six files were required. He took 241, including salary bands and the unredacted contracts of colleagues who had nothing to do with any of it. That he later sent only the six is mitigation at sentence, not a cure for the entry — the copying was complete the moment he left the building. So the benchmark lands on prosecute, but softly, and with a note the UI should carry: the disproportion, not the entry, is what defeats him. A player who selects only A and B never sees this, argues the permission point, and is right about the wrong thing — the entry is the least interesting element in the section."
   },
-  "simulatedSplit": { "a": 58 }
+  "simulatedSplit": {
+    "a": 58
+  }
 }

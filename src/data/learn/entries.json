@@ -1,0 +1,252 @@
+[
+  {
+    "id": "honest-belief",
+    "term": "Honest belief",
+    "category": "Legal concepts",
+    "meaning": "A belief the person actually held, whether or not a reasonable person would have held it. Where a rule turns on honest belief, the test is sincerity, not sense: a foolish belief still defends, a pretended one does not.",
+    "heardAs": "\"He genuinely thought it was his.\"",
+    "usedWhen": "The rule asks what someone believed rather than what they should have known.",
+    "related": ["mens-rea", "burden-of-proof"],
+    "practiceTag": "belief"
+  },
+  {
+    "id": "mens-rea",
+    "term": "Mens rea",
+    "category": "Legal concepts",
+    "meaning": "The mental element of an offence — what the person intended, knew, or was reckless about. Most serious offences need it alongside the conduct itself. Doing the act is rarely enough on its own.",
+    "heardAs": "\"There was no intent.\"",
+    "usedWhen": "Conduct is admitted but the state of mind behind it is contested.",
+    "related": ["honest-belief", "actus-reus"],
+    "practiceTag": "intent"
+  },
+  {
+    "id": "actus-reus",
+    "term": "Actus reus",
+    "category": "Legal concepts",
+    "meaning": "The conduct element of an offence — the act, omission, or state of affairs the rule prohibits. Paired with mens rea: the doing and the meaning to.",
+    "heardAs": "\"The act itself isn't in dispute.\"",
+    "usedWhen": "Separating what happened from what was meant by it.",
+    "related": ["mens-rea"],
+    "practiceTag": "conduct"
+  },
+  {
+    "id": "burden-of-proof",
+    "term": "Burden of proof",
+    "category": "Procedure",
+    "meaning": "Who has to prove what, and to what standard. The side carrying it loses if the evidence lands evenly. Shifting it — even slightly — usually decides the case, which is why arguments fight over it so hard.",
+    "heardAs": "\"They haven't discharged the burden.\"",
+    "usedWhen": "The evidence is genuinely balanced and someone has to lose the tie.",
+    "related": ["standard-of-proof", "defence"],
+    "practiceTag": "burden"
+  },
+  {
+    "id": "standard-of-proof",
+    "term": "Standard of proof",
+    "category": "Procedure",
+    "meaning": "How convinced the decision-maker must be. Criminal matters usually demand near-certainty; civil ones ask only which side is more likely. The same facts can win under one and lose under the other.",
+    "heardAs": "\"On the balance of probabilities.\"",
+    "usedWhen": "Comparing how the same evidence would fare in different forums.",
+    "related": ["burden-of-proof"],
+    "practiceTag": "burden"
+  },
+  {
+    "id": "defence",
+    "term": "Defence",
+    "category": "Legal concepts",
+    "meaning": "A reason the conduct is not punishable even though it happened. Some defeat an element of the offence; others excuse it entirely. Many carry their own conditions, and failing one condition sinks the whole defence.",
+    "heardAs": "\"The defence is available on these facts.\"",
+    "usedWhen": "Conceding the act but denying liability for it.",
+    "related": ["honest-belief", "proportionality"],
+    "practiceTag": "defence"
+  },
+  {
+    "id": "proportionality",
+    "term": "Proportionality",
+    "category": "Legal concepts",
+    "meaning": "Whether the response went further than the justification allowed. A defence sized to the problem survives; one that overshoots often fails on this point alone, even when the underlying grievance was real.",
+    "heardAs": "\"He went well beyond what was necessary.\"",
+    "usedWhen": "The justification is genuine but the conduct exceeded it.",
+    "related": ["defence"],
+    "practiceTag": "defence"
+  },
+  {
+    "id": "course-of-employment",
+    "term": "Course of employment",
+    "category": "Legal concepts",
+    "meaning": "Whether an act was done as part of the job rather than alongside it. Written rules matter but rarely settle it — what the employer knew about and tolerated usually counts for more than what the handbook said.",
+    "heardAs": "\"He was acting in the course of his employment.\"",
+    "usedWhen": "An injury or act falls near the edge of working time.",
+    "related": ["constructive-knowledge"],
+    "practiceTag": "scope"
+  },
+  {
+    "id": "constructive-knowledge",
+    "term": "Constructive knowledge",
+    "category": "Legal concepts",
+    "meaning": "What someone is treated as knowing because they should have known it, whether or not they did. Widespread practice within an organisation is the classic route: at some scale, not knowing stops being available as an answer.",
+    "heardAs": "\"They knew or ought to have known.\"",
+    "usedWhen": "An organisation denies awareness of something happening in plain sight.",
+    "related": ["course-of-employment"],
+    "practiceTag": "knowledge"
+  },
+  {
+    "id": "authorisation",
+    "term": "Authorisation",
+    "category": "Legal concepts",
+    "meaning": "Permission to do the thing. It can be withdrawn without the physical means being removed, which is why a working key, badge, or password is evidence of permission rather than proof of it.",
+    "heardAs": "\"His access had been revoked.\"",
+    "usedWhen": "Someone used a credential they still held but no longer had permission to use.",
+    "related": ["mens-rea"],
+    "practiceTag": "access"
+  },
+  {
+    "id": "objection-relevance",
+    "term": "Objection: relevance",
+    "category": "Objections",
+    "meaning": "An assertion that the evidence does not bear on any fact in issue. Often the quickest objection to make and the easiest to lose, because relevance is a low bar — evidence need only make a fact more or less likely.",
+    "heardAs": "\"Objection — relevance.\"",
+    "usedWhen": "Material is being introduced that touches nothing actually in dispute.",
+    "related": ["objection-hearsay", "probative-value"],
+    "practiceTag": "objections"
+  },
+  {
+    "id": "objection-hearsay",
+    "term": "Objection: hearsay",
+    "category": "Objections",
+    "meaning": "An out-of-court statement offered to prove that what it said was true. The problem is that the person who said it cannot be tested on it. Numerous exceptions exist, and most hearsay fights are really fights about which exception applies.",
+    "heardAs": "\"Objection — hearsay.\"",
+    "usedWhen": "A witness reports what someone else said in order to prove its content.",
+    "related": ["objection-relevance"],
+    "practiceTag": "objections"
+  },
+  {
+    "id": "objection-leading",
+    "term": "Objection: leading",
+    "category": "Objections",
+    "meaning": "A question that supplies its own answer. Generally barred on direct examination, where the witness is supposed to testify rather than agree, and generally permitted on cross.",
+    "heardAs": "\"Objection — leading the witness.\"",
+    "usedWhen": "A friendly witness is being walked through the answer.",
+    "related": ["objection-relevance"],
+    "practiceTag": "objections"
+  },
+  {
+    "id": "probative-value",
+    "term": "Probative value",
+    "category": "Legal concepts",
+    "meaning": "How much a piece of evidence actually moves the question. Weighed against the risk of unfair prejudice: evidence can be true, relevant, and still excluded because of what it invites a decision-maker to do with it.",
+    "heardAs": "\"More prejudicial than probative.\"",
+    "usedWhen": "Damaging evidence proves less than it suggests.",
+    "related": ["objection-relevance"],
+    "practiceTag": "evidence"
+  },
+  {
+    "id": "circumstantial-evidence",
+    "term": "Circumstantial evidence",
+    "category": "Legal concepts",
+    "meaning": "Evidence that requires an inference to connect it to the fact in issue. Not weaker than direct evidence as a class — a combination of circumstances is often harder to explain away than a single eyewitness.",
+    "heardAs": "\"The case is entirely circumstantial.\"",
+    "usedWhen": "No one saw it happen but the surrounding facts point one way.",
+    "related": ["probative-value", "inference"],
+    "practiceTag": "evidence"
+  },
+  {
+    "id": "inference",
+    "term": "Inference",
+    "category": "Legal concepts",
+    "meaning": "A conclusion drawn from proven facts. Legitimate when the facts reasonably support it; speculation when they merely permit it. The line between the two is where most evidence arguments are actually won.",
+    "heardAs": "\"That's speculation, not inference.\"",
+    "usedWhen": "An argument moves from what is proven to what it implies.",
+    "related": ["circumstantial-evidence"],
+    "practiceTag": "evidence"
+  },
+  {
+    "id": "prosecutorial-discretion",
+    "term": "Prosecutorial discretion",
+    "category": "Procedure",
+    "meaning": "The choice to bring a charge at all. A case can be legally sound and still not worth prosecuting — on public interest, proportionality, or the strength of the evidence.",
+    "heardAs": "\"It meets the threshold but isn't in the public interest.\"",
+    "usedWhen": "The question is whether to charge rather than whether the elements are met.",
+    "related": ["burden-of-proof"],
+    "practiceTag": "procedure"
+  },
+  {
+    "id": "public-interest",
+    "term": "Public interest",
+    "category": "Procedure",
+    "meaning": "Whether pursuing a matter serves the public rather than merely a complainant. Weighs seriousness, harm, culpability, and the cost of proceeding. Frequently the real reason a technically strong case goes nowhere.",
+    "heardAs": "\"Not in the public interest to proceed.\"",
+    "usedWhen": "The elements are satisfied but the prosecution would achieve little.",
+    "related": ["prosecutorial-discretion"],
+    "practiceTag": "procedure"
+  },
+  {
+    "id": "whistleblower-protection",
+    "term": "Whistleblower protection",
+    "category": "Legal concepts",
+    "meaning": "Shielding someone who exposes wrongdoing from consequences for the exposure. Usually conditional: the concern must be genuine, the disclosure proportionate, and internal channels tried first — unless those channels were never real.",
+    "heardAs": "\"He had no other way to raise it.\"",
+    "usedWhen": "Someone broke a rule in order to reveal a breach of another.",
+    "related": ["proportionality", "defence"],
+    "practiceTag": "defence"
+  },
+  {
+    "id": "estoppel",
+    "term": "Estoppel",
+    "category": "Legal concepts",
+    "meaning": "Being prevented from asserting something because your own earlier conduct or assurance made someone rely on the opposite. Roughly: you do not get to take back what the other side reasonably acted on.",
+    "heardAs": "\"They're estopped from denying it now.\"",
+    "usedWhen": "A party reverses a position the other side already relied upon.",
+    "related": ["honest-belief"],
+    "practiceTag": "reliance"
+  },
+  {
+    "id": "reliance",
+    "term": "Reliance",
+    "category": "Legal concepts",
+    "meaning": "Acting on what someone told you, to your cost. Its presence turns a broken assurance into a legal problem rather than a disappointment.",
+    "heardAs": "\"She relied on what she was told.\"",
+    "usedWhen": "An assurance was given, acted on, and then withdrawn.",
+    "related": ["estoppel", "honest-belief"],
+    "practiceTag": "reliance"
+  },
+  {
+    "id": "mistake-of-fact",
+    "term": "Mistake of fact",
+    "category": "Legal concepts",
+    "meaning": "Being wrong about a circumstance rather than about the law. Can negate the mental element of an offence. Being wrong about what the law says almost never helps; being wrong about what was happening often does.",
+    "heardAs": "\"He was mistaken about whose money it was.\"",
+    "usedWhen": "Someone's account of events was wrong but sincerely held.",
+    "related": ["honest-belief", "mens-rea"],
+    "practiceTag": "belief"
+  },
+  {
+    "id": "material-fact",
+    "term": "Material fact",
+    "category": "Procedure",
+    "meaning": "A fact that could change the outcome. Materiality is what separates the detail worth arguing about from the detail that merely happened.",
+    "heardAs": "\"That's not material to the issue.\"",
+    "usedWhen": "Sorting which of many facts actually carry the decision.",
+    "related": ["probative-value"],
+    "practiceTag": "evidence"
+  },
+  {
+    "id": "adverse-inference",
+    "term": "Adverse inference",
+    "category": "Procedure",
+    "meaning": "A conclusion drawn against someone from their silence, absence, or failure to produce something. Available only in limited circumstances, and easy to over-claim in argument.",
+    "heardAs": "\"You can draw an adverse inference from that.\"",
+    "usedWhen": "A party declines to explain something only they could explain.",
+    "related": ["inference", "burden-of-proof"],
+    "practiceTag": "procedure"
+  },
+  {
+    "id": "obiter",
+    "term": "Obiter",
+    "category": "Courtroom terms",
+    "meaning": "Part of a judgment that was not necessary to the decision. Persuasive but not binding — useful to cite, dangerous to lean on.",
+    "heardAs": "\"That was obiter, not the holding.\"",
+    "usedWhen": "Distinguishing what a case decided from what it merely observed.",
+    "related": ["material-fact"],
+    "practiceTag": "procedure"
+  }
+]

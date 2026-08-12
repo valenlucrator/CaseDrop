@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 import { getCase } from '../data/cases';
-import { RATING_ENABLED } from '../engine/rating';
+
 import { usePlayer } from '../state/PlayerContext';
 import { accuracy, juryWinRate } from '../state/reducer';
 import { clear } from '../state/storage';
+import { hapticsSupported } from '../lib/haptics';
+import { Pressable } from '../components/motion/Pressable';
 import { MetaLabel, Screen } from '../components/Screen';
 
 const DIMENSIONS = [
@@ -142,6 +144,29 @@ export function Profile() {
         </div>
       )}
 
+      <div className="flex flex-col gap-3">
+        <MetaLabel>Settings</MetaLabel>
+        {/*
+          The haptics toggle appears only where it would do something.
+          navigator.vibrate does not exist in Safari on iOS, and a switch that
+          silently does nothing is worse than no switch.
+        */}
+        {hapticsSupported() && (
+          <Toggle
+            label="Haptics"
+            hint="Vibration on selection and commit"
+            value={state.settings.haptics}
+            onChange={(v) => dispatch({ type: 'SET_SETTING', key: 'haptics', value: v })}
+          />
+        )}
+        <Toggle
+          label="Sound"
+          hint="Short tones on lock, reveal and result"
+          value={state.settings.sound}
+          onChange={(v) => dispatch({ type: 'SET_SETTING', key: 'sound', value: v })}
+        />
+      </div>
+
       {import.meta.env.DEV && (
         <button
           type="button"
@@ -152,10 +177,44 @@ export function Profile() {
           className="mb-4 rounded-[10px] border border-border py-2.5 text-[12px] text-text-faint"
         >
           Reset local progress (dev only)
-          {RATING_ENABLED ? '' : ' · rating gate closed'}
         </button>
       )}
     </Screen>
+  );
+}
+
+function Toggle({
+  label,
+  hint,
+  value,
+  onChange,
+}: {
+  label: string;
+  hint: string;
+  value: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <Pressable
+      feedback={value ? null : 'select'}
+      onClick={() => onChange(!value)}
+      className="flex items-center justify-between rounded-[14px] border border-border bg-surface-1 p-4 text-left"
+    >
+      <span className="flex flex-col gap-1">
+        <span className="text-[14.5px] font-medium">{label}</span>
+        <span className="text-[12px] text-text-muted">{hint}</span>
+      </span>
+      <span
+        className={`relative h-[26px] w-[44px] shrink-0 rounded-full transition-colors duration-150 ${
+          value ? 'bg-accent' : 'bg-surface-3'
+        }`}
+      >
+        <span
+          className="absolute top-[3px] h-5 w-5 rounded-full bg-text-primary transition-[left] duration-150"
+          style={{ left: value ? 21 : 3 }}
+        />
+      </span>
+    </Pressable>
   );
 }
 

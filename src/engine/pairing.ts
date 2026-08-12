@@ -86,11 +86,50 @@ export function simulateJury(
   return { yours, theirs: 100 - yours, jurors };
 }
 
-/** How long a submission sits pending before the result is available. */
-export const JUDGING_DELAY_MS = LIVE_PAIRING ? 3 * 60 * 60 * 1000 : 20 * 1000;
+/**
+ * How long a submission sits pending before the result is available.
+ *
+ * The delay IS the return hook — the whole async design exists to make the
+ * player come back to something. Three hours is the floor for anything sent
+ * to a tester. Set VITE_JUDGING_DELAY_MS=20000 locally when you need to walk
+ * the full loop in one sitting; it is a dev override, not a build setting.
+ */
+/** What any built artefact uses. This is the number that ships. */
+export const JUDGING_DELAY_FLOOR_MS = 3 * 60 * 60 * 1000;
+
+const DEV_OVERRIDE_MS = Number(import.meta.env.VITE_JUDGING_DELAY_MS) || 0;
+const OVERRIDE_ACTIVE = Boolean(import.meta.env.DEV) && DEV_OVERRIDE_MS > 0;
+
+export const JUDGING_DELAY_MS = OVERRIDE_ACTIVE ? DEV_OVERRIDE_MS : JUDGING_DELAY_FLOOR_MS;
+
+/** True only in a dev session that has opted into a shortened loop. */
+export const JUDGING_DELAY_IS_OVERRIDDEN = OVERRIDE_ACTIVE;
 
 export function isReadyToJudge(playedAt: string, now: number = Date.now()): boolean {
   return now - new Date(playedAt).getTime() >= JUDGING_DELAY_MS;
+}
+
+// ---- source switch ---------------------------------------------------------
+
+export type OpponentSource = 'archive' | 'live';
+
+/**
+ * Below the gate, opponents come from the hand-written archive. Above it,
+ * from real submissions — but still matched on the same evidence pair. That
+ * constraint does not relax when live players arrive: a duel is only
+ * meaningful if both sides saw the same information.
+ */
+export function opponentSource(liveEnabled: boolean): OpponentSource {
+  return liveEnabled && LIVE_PAIRING ? 'live' : 'archive';
+}
+
+/** Archive matches are labelled honestly and never touch rating. */
+export function isRated(source: OpponentSource): boolean {
+  return source === 'live';
+}
+
+export function sourceLabel(source: OpponentSource): string | null {
+  return source === 'archive' ? 'Compared against the case archive' : null;
 }
 
 /**

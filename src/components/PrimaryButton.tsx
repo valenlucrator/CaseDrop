@@ -1,4 +1,7 @@
+import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
+import { D, E } from '../lib/motion';
+import { haptic } from '../lib/haptics';
 
 type Variant = 'primary' | 'secondary';
 
@@ -8,6 +11,8 @@ interface Props {
   disabled?: boolean;
   variant?: Variant;
   className?: string;
+  /** Set null where the caller fires its own (the LOCK sequence does). */
+  feedback?: 'tap' | 'lock' | null;
 }
 
 /**
@@ -22,9 +27,10 @@ export function PrimaryButton({
   disabled = false,
   variant = 'primary',
   className = '',
+  feedback = 'tap',
 }: Props) {
   const base =
-    'flex h-14 w-full items-center justify-center rounded-[13px] font-display text-[13px] font-bold tracking-[0.14em] transition-[background-color,transform] duration-100 active:scale-[0.985] disabled:active:scale-100';
+    'flex h-14 w-full items-center justify-center rounded-[13px] font-display text-[13px] font-bold tracking-[0.14em]';
 
   const look = disabled
     ? 'bg-surface-2 text-text-faint border border-border-strong'
@@ -33,8 +39,19 @@ export function PrimaryButton({
       : 'bg-surface-1 text-text-primary border border-border-strong active:bg-surface-3';
 
   return (
-    <button type="button" onClick={onClick} disabled={disabled} className={`${base} ${look} ${className}`}>
+    <motion.button
+      type="button"
+      disabled={disabled}
+      whileTap={disabled ? undefined : { scale: 0.97 }}
+      transition={{ duration: D.instant, ease: E.out }}
+      onClick={() => {
+        if (disabled) return;
+        if (feedback) haptic(feedback);
+        onClick?.();
+      }}
+      className={`${base} ${look} ${className}`}
+    >
       {children}
-    </button>
+    </motion.button>
   );
 }

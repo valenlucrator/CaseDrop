@@ -2,13 +2,27 @@
   "id": "001",
   "slug": "second-refund",
   "title": "The Second Refund",
-  "tags": ["Property", "Mistake", "Intent"],
+  "tags": [
+    "Property",
+    "Mistake",
+    "Intent"
+  ],
+  "concepts": [
+    "honest-belief",
+    "mistake-of-fact",
+    "reliance",
+    "estoppel",
+    "mens-rea"
+  ],
   "difficulty": 2,
   "estimatedMinutes": 3,
   "jurisdictionRule": "Under §31 of the Commercial Code of Aldren, a person commits theft of mistakenly delivered property if they retain property knowing it was transferred to them in error, and fail to take reasonable steps to return it within thirty days of becoming aware of the error. An honest belief that the transfer was intended is a complete defence. The belief need not be reasonable, only genuinely held.",
   "scenario": "Neris Halvard ordered a laptop from Corvid Supply for 1,240 credits, then returned it inside the return window. On 2 April the refund landed in her account. On 4 April it landed again.\n\nCorvid reconciles duplicate payments on a fortnightly cycle. This one slipped through: the second refund had been issued by hand by a support agent closing out a ticket, and manual entries sit outside the reconciliation batch. Nobody at Corvid looked at the account again for a month.\n\nHalvard's rent was due on 7 April. The money was gone by the 5th.\n\nOn 11 April she opened a support chat. It was a Sunday, and the desk that weekend was covered by an outsourced contractor rather than Corvid's own staff.\n\nOn 5 May — day thirty-four — Corvid's accounts department emailed her asking for the money back within seven days. She did not reply. On 20 May Corvid referred the matter to prosecutors.\n\nHalvard has no prior convictions and has not returned the money. She has never disputed that she received it twice.",
   "question": "Should prosecutors bring a theft charge?",
-  "options": { "a": "Prosecute", "b": "Do not prosecute" },
+  "options": {
+    "a": "Prosecute",
+    "b": "Do not prosecute"
+  },
   "evidence": [
     {
       "id": "A",
@@ -17,7 +31,15 @@
       "body": "Halvard: \"there's two refunds on here from you, is the second one meant to be mine?\"\nAgent: \"I can see both on the account. If it's cleared into your balance it's yours to use.\"\nHalvard: \"ok. thanks\"\nThe agent did not escalate the ticket or flag the duplicate.",
       "favors": "b",
       "weight": 2,
-      "keyTerms": ["chat", "agent", "told", "assur", "support", "yours", "confirm"]
+      "keyTerms": [
+        "chat",
+        "agent",
+        "told",
+        "assur",
+        "support",
+        "yours",
+        "confirm"
+      ]
     },
     {
       "id": "B",
@@ -26,7 +48,14 @@
       "body": "Balance on 1 April: 63 credits. Both refunds land. On 5 April, 1,190 credits leave for \"HALLOW LETTINGS — RENT\". Closing balance for the month: 118 credits. No transfer out of the account is ever reversed or attempted.",
       "favors": "neutral",
       "weight": 1,
-      "keyTerms": ["spent", "rent", "balance", "statement", "gone", "afford"]
+      "keyTerms": [
+        "spent",
+        "rent",
+        "balance",
+        "statement",
+        "gone",
+        "afford"
+      ]
     },
     {
       "id": "C",
@@ -35,7 +64,14 @@
       "body": "Clause 9.2: \"Where a refund is issued in duplicate, Corvid Supply will recover the surplus automatically within fourteen days. Customers are not required to take action.\" The clause was still published unchanged on the day prosecutors were contacted.",
       "favors": "b",
       "weight": 2,
-      "keyTerms": ["policy", "clause", "automatic", "recover", "not required", "fourteen"]
+      "keyTerms": [
+        "policy",
+        "clause",
+        "automatic",
+        "recover",
+        "not required",
+        "fourteen"
+      ]
     },
     {
       "id": "D",
@@ -44,7 +80,15 @@
       "body": "\"Our records show a duplicate refund of 1,240 credits issued to you on 4 April in error. Please return this sum within seven days using the link below. Failure to respond may result in referral.\" Delivery and read receipts both confirmed. No reply was ever sent.",
       "favors": "a",
       "weight": 2,
-      "keyTerms": ["email", "demand", "notice", "ignored", "no reply", "seven days", "return"]
+      "keyTerms": [
+        "email",
+        "demand",
+        "notice",
+        "ignored",
+        "no reply",
+        "seven days",
+        "return"
+      ]
     },
     {
       "id": "E",
@@ -53,7 +97,15 @@
       "body": "Three searches inside eleven minutes: \"do i have to give back money paid to me by mistake\", \"bank error in my favour law aldren\", \"how long before money paid by mistake is mine\". No page was open longer than forty seconds.",
       "favors": "a",
       "weight": 2,
-      "keyTerms": ["search", "history", "doubt", "knew", "suspect", "aware", "googl"]
+      "keyTerms": [
+        "search",
+        "history",
+        "doubt",
+        "knew",
+        "suspect",
+        "aware",
+        "googl"
+      ]
     }
   ],
   "selectCount": 2,
@@ -89,5 +141,7 @@
     ],
     "reasoning": "The prosecution case wants the clock to start on 4 April, or at the latest on 12 April when she searched. But §31 is written around knowledge and belief, not suspicion, and it forgives an unreasonable belief so long as it is genuine. She asked the question out loud on 11 April and was told the money was hers — by a contractor, but the statute does not ask whether her source was authoritative. Corvid's own clause 9.2 then reinforced exactly that belief. The searches cut the other way and are the strongest thing the prosecution has, but people search for reassurance as often as for escape routes. On the most defensible reading, the first moment her belief became untenable was the 5 May email, and the seven-day window it opened had not run out before Corvid went to prosecutors. That is a debt, not a theft."
   },
-  "simulatedSplit": { "a": 54 }
+  "simulatedSplit": {
+    "a": 54
+  }
 }

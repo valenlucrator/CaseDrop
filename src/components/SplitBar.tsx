@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { D, E } from '../lib/motion';
+import { CountUp } from './motion/CountUp';
 
 interface Props {
   label: string;
@@ -7,7 +9,9 @@ interface Props {
   mine?: boolean;
   tone?: 'accent' | 'win' | 'neutral';
   size?: 'md' | 'sm';
-  animate?: boolean;
+  /** Gate the fill + count. Held false while the reveal waits its beat. */
+  start?: boolean;
+  duration?: number;
 }
 
 const FILL = {
@@ -22,15 +26,16 @@ const TEXT = {
   neutral: 'text-text-secondary',
 } as const;
 
-export function SplitBar({ label, percent, mine = false, tone, size = 'md', animate = true }: Props) {
+export function SplitBar({
+  label,
+  percent,
+  mine = false,
+  tone,
+  size = 'md',
+  start = true,
+  duration = D.reveal,
+}: Props) {
   const resolved = tone ?? (mine ? 'accent' : 'neutral');
-  const [width, setWidth] = useState(animate ? 0 : percent);
-
-  useEffect(() => {
-    if (!animate) return setWidth(percent);
-    const id = requestAnimationFrame(() => setWidth(percent));
-    return () => cancelAnimationFrame(id);
-  }, [percent, animate]);
 
   return (
     <div className="flex flex-col gap-[11px]">
@@ -42,18 +47,23 @@ export function SplitBar({ label, percent, mine = false, tone, size = 'md', anim
         >
           {label}
         </div>
-        <div
-          className={`font-mono font-semibold ${TEXT[resolved]} ${
+        <CountUp
+          to={percent}
+          start={start}
+          placeholder="—"
+          suffix="%"
+          duration={duration}
+          className={`font-mono font-semibold tabular-nums ${TEXT[resolved]} ${
             size === 'md' ? 'text-[30px]' : 'text-[22px]'
           } leading-none`}
-        >
-          {percent}%
-        </div>
+        />
       </div>
       <div className={`overflow-hidden rounded-[3px] bg-surface-2 ${size === 'md' ? 'h-1.5' : 'h-[5px]'}`}>
-        <div
-          className={`h-full rounded-[3px] transition-[width] duration-700 ease-out ${FILL[resolved]}`}
-          style={{ width: `${width}%` }}
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: start ? `${percent}%` : 0 }}
+          transition={{ duration, ease: E.out }}
+          className={`h-full rounded-[3px] ${FILL[resolved]}`}
         />
       </div>
     </div>

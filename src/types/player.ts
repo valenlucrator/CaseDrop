@@ -37,9 +37,15 @@ export interface JuryVote {
   votedAt: string;
 }
 
+export interface PlayerSettings {
+  haptics: boolean;
+  sound: boolean;
+}
+
 export interface PlayerState {
   version: 1;
   createdAt: string;
+  settings: PlayerSettings;
   streak: number;
   lastPlayedDate: string | null; // YYYY-MM-DD
   casesCompleted: number;
@@ -54,4 +60,6 @@ export interface PlayerState {
    * whole ladder on later.
    */
   rating: number | null;
+  /** Live matches that moved the rating. Drives K-factor and placement. */
+  ratedMatches: number;
 }

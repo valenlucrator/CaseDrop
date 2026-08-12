@@ -7,6 +7,7 @@ export function freshState(now: Date = new Date()): PlayerState {
   return {
     version: VERSION,
     createdAt: now.toISOString(),
+    settings: { haptics: true, sound: false },
     streak: 0,
     lastPlayedDate: null,
     casesCompleted: 0,
@@ -16,6 +17,7 @@ export function freshState(now: Date = new Date()): PlayerState {
     juryVotes: [],
     juryVotesCast: 0,
     rating: null, // stays null until the population gate opens
+    ratedMatches: 0,
   };
 }
 
@@ -30,7 +32,14 @@ export function migrate(raw: unknown): PlayerState {
   if (candidate.version !== VERSION) return freshState();
 
   // Fill anything a partial write left missing rather than discarding the lot.
-  return { ...freshState(), ...candidate, version: VERSION };
+  // This is what lets a new field (settings) land without wiping testers.
+  const base = freshState();
+  return {
+    ...base,
+    ...candidate,
+    settings: { ...base.settings, ...(candidate.settings ?? {}) },
+    version: VERSION,
+  };
 }
 
 export function load(): PlayerState {

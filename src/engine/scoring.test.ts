@@ -8,9 +8,18 @@ import {
   scoreSubmission,
   wordCount,
 } from './scoring';
-import { communitySplit, findOpponent, simulateJury, seedArguments } from './pairing';
-import { applyResult, expectedScore, nextRating, RATING_ENABLED } from './rating';
+import {
+  communitySplit, findOpponent, isRated, isReadyToJudge, JUDGING_DELAY_MS,
+  opponentSource, seedArguments, simulateJury, sourceLabel,
+  JUDGING_DELAY_FLOOR_MS, JUDGING_DELAY_IS_OVERRIDDEN,
+} from './pairing';
+import {
+  applyResult, expectedScore, isPlacing, kFactor, nextRating, rankFor,
+} from './rating';
+import { EMPTY_POPULATION, GATES } from './population';
+import { FEATURES, isGateMet } from '../config/features';
 import { cases, caseForDate, getCase, validateCase } from '../data/cases';
+import { entries, getEntry, searchEntries, validateEntry } from '../data/learn';
 import type { Case } from '../types/case';
 
 const c001 = getCase('001') as Case; // lean_b
@@ -248,17 +257,160 @@ describe('simulateJury', () => {
   });
 });
 
-describe('rating — gated off in v1', () => {
-  it('is disabled, so results never move the number', () => {
-    expect(RATING_ENABLED).toBe(false);
-    expect(applyResult(1200, 1200, 1)).toBe(1200);
-    expect(applyResult(null, 1200, 1)).toBeNull();
+describe('rating — dormant in v1', () => {
+  const on = { enabled: true, live: true };
+
+  it('leaves the rating untouched while the feature is off', () => {
+    expect(applyResult(1200, 0, 1200, 1, { enabled: false, live: true })).toEqual({
+      rating: 1200,
+      ratedMatches: 0,
+      delta: null,
+    });
+    expect(applyResult(null, 0, 1200, 1, { enabled: false, live: true }).rating).toBeNull();
   });
 
-  it('still computes correct Elo for when the gate opens', () => {
+  it('never accrues from an archive match, even with the feature on', () => {
+    const r = applyResult(1200, 3, 1200, 1, { enabled: true, live: false });
+    expect(r.rating).toBe(1200);
+    expect(r.delta).toBeNull();
+    expect(r.ratedMatches).toBe(3);
+  });
+
+  it('moves on a live match once enabled', () => {
+    const r = applyResult(1200, 0, 1200, 1, on);
+    expect(r.rating).toBe(1216); // K=32 while placing
+    expect(r.delta).toBe(16);
+    expect(r.ratedMatches).toBe(1);
+  });
+
+  it('drops K after the first 20 rated matches', () => {
+    expect(kFactor(0)).toBe(32);
+    expect(kFactor(19)).toBe(32);
+    expect(kFactor(20)).toBe(16);
+    expect(applyResult(1200, 25, 1200, 1, on).delta).toBe(8);
+  });
+
+  it('computes correct Elo', () => {
     expect(expectedScore(1200, 1200)).toBeCloseTo(0.5);
-    expect(nextRating(1200, 1200, 1)).toBe(1212);
-    expect(nextRating(1200, 1200, 0)).toBe(1188);
-    expect(nextRating(1200, 1200, 0.5)).toBe(1200);
+    expect(nextRating(1200, 1200, 1, 24)).toBe(1212);
+    expect(nextRating(1200, 1200, 0, 24)).toBe(1188);
+    expect(nextRating(1200, 1200, 0.5, 24)).toBe(1200);
+  });
+
+  it('hides the number behind Placing… for the first five rated matches', () => {
+    expect(isPlacing(1200, 4)).toBe(true);
+    expect(rankFor(1200, 4)).toBe('Placing…');
+    expect(isPlacing(1200, 5)).toBe(false);
+    expect(rankFor(null, 99)).toBeNull();
+  });
+
+  it('maps ratings to bands with three divisions, and none on the open top band', () => {
+    expect(rankFor(100, 99)).toBe('Law Student III');
+    expect(rankFor(900, 99)).toBe('Law Student I'); // top third of 0–999
+    expect(rankFor(1050, 99)).toBe('Legal Intern III');
+    expect(rankFor(1300, 99)).toBe('Associate III');
+    expect(rankFor(1450, 99)).toBe('Associate II');
+    expect(rankFor(1550, 99)).toBe('Associate I');
+    expect(rankFor(1600, 99)).toBe('Senior Associate III');
+    expect(rankFor(2000, 99)).toBe('Counsel III');
+    expect(rankFor(2200, 99)).toBe('Partner');
+    expect(rankFor(3000, 99)).toBe('Partner');
+  });
+
+  it('keeps band boundaries contiguous', () => {
+    for (let r = 0; r <= 2600; r += 25) {
+      expect(rankFor(r, 99)).not.toBeNull();
+    }
+  });
+});
+
+describe('feature gates', () => {
+  it('every flag ships false — Phase A is the default behaviour', () => {
+    for (const [name, value] of Object.entries(FEATURES)) {
+      expect(value, `${name} should ship disabled`).toBe(false);
+    }
+  });
+
+  it('a gated feature stays shut with no population, however it is flagged', () => {
+    expect(isGateMet('rating', EMPTY_POPULATION)).toBe(false);
+    expect(isGateMet('liveOpponents', EMPTY_POPULATION)).toBe(false);
+    expect(isGateMet('liveJury', EMPTY_POPULATION)).toBe(false);
+  });
+
+  it('opens a gate only at its threshold', () => {
+    expect(isGateMet('rating', { ...EMPTY_POPULATION, rating: GATES.rating - 1 })).toBe(false);
+    expect(isGateMet('rating', { ...EMPTY_POPULATION, rating: GATES.rating })).toBe(true);
+  });
+
+  it('leaves ungated features alone', () => {
+    expect(isGateMet('learn', EMPTY_POPULATION)).toBe(true);
+    expect(isGateMet('community', EMPTY_POPULATION)).toBe(true);
+  });
+});
+
+describe('opponent source', () => {
+  it('serves the archive while live pairing is off', () => {
+    expect(opponentSource(false)).toBe('archive');
+    expect(opponentSource(true)).toBe('archive'); // LIVE_PAIRING still false
+  });
+
+  it('labels archive matches honestly and never rates them', () => {
+    expect(isRated('archive')).toBe(false);
+    expect(isRated('live')).toBe(true);
+    expect(sourceLabel('archive')).toBe('Compared against the case archive');
+    expect(sourceLabel('live')).toBeNull();
+  });
+});
+
+describe('judging delay', () => {
+  it('ships at three hours — the delay is the return hook', () => {
+    // The floor is what any built artefact uses. A dev session may shorten
+    // the *active* delay via VITE_JUDGING_DELAY_MS, but it cannot move this.
+    expect(JUDGING_DELAY_FLOOR_MS).toBeGreaterThanOrEqual(3 * 60 * 60 * 1000);
+  });
+
+  it('only ever shortens the delay in a dev session', () => {
+    if (!import.meta.env.DEV) {
+      expect(JUDGING_DELAY_MS).toBe(JUDGING_DELAY_FLOOR_MS);
+      expect(JUDGING_DELAY_IS_OVERRIDDEN).toBe(false);
+    }
+    // Whatever the environment, the override can never lengthen the wait
+    // beyond the shipped floor or drop it to zero.
+    expect(JUDGING_DELAY_MS).toBeGreaterThan(0);
+    expect(JUDGING_DELAY_MS).toBeLessThanOrEqual(JUDGING_DELAY_FLOOR_MS);
+  });
+
+  it('holds a submission pending until the window passes', () => {
+    const now = Date.now();
+    const played = new Date(now).toISOString();
+    expect(isReadyToJudge(played, now)).toBe(false);
+    expect(isReadyToJudge(played, now + JUDGING_DELAY_MS - 1)).toBe(false);
+    expect(isReadyToJudge(played, now + JUDGING_DELAY_MS)).toBe(true);
+  });
+});
+
+describe('learn entries', () => {
+  it('meets the minimum viable content bar (25 entries)', () => {
+    expect(entries.length).toBeGreaterThanOrEqual(25);
+  });
+
+  it('keeps every meaning inside the word cap and every link resolvable', () => {
+    for (const e of entries) expect(validateEntry(e)).toEqual([]);
+  });
+
+  it('links every case concept to a real entry', () => {
+    for (const c of cases) {
+      expect(c.concepts.length).toBeGreaterThan(0);
+      for (const id of c.concepts) {
+        expect(getEntry(id), `${c.id} references missing concept "${id}"`).toBeDefined();
+      }
+    }
+  });
+
+  it('searches term, meaning and category', () => {
+    expect(searchEntries('hearsay').map((e) => e.id)).toContain('objection-hearsay');
+    expect(searchEntries('Objections').length).toBeGreaterThan(1);
+    expect(searchEntries('zzzzz')).toEqual([]);
+    expect(searchEntries('').length).toBe(entries.length);
   });
 });

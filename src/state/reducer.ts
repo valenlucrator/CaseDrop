@@ -1,7 +1,8 @@
 import type { Side } from '../types/case';
 import type { PlayerState, Submission } from '../types/player';
 import { getCase, todayKey } from '../data/cases';
-import { findOpponent, isReadyToJudge, simulateJury } from '../engine/pairing';
+import { findOpponent, isRated, isReadyToJudge, opponentSource, simulateJury } from '../engine/pairing';
+import { applyResult, STARTING_RATING } from '../engine/rating';
 import { scoreSubmission } from '../engine/scoring';
 import { freshState } from './storage';
 
@@ -17,6 +18,7 @@ export type Action =
   | { type: 'JUDGE_PENDING'; now?: number }
   | { type: 'MARK_SEEN'; caseId: string }
   | { type: 'CAST_JURY_VOTE'; caseId: string; pairKey: string; votedFor: 'a' | 'b' }
+  | { type: 'SET_SETTING'; key: keyof PlayerState['settings']; value: boolean }
   | { type: 'RESET' };
 
 function yesterdayOf(dateKey: string): string {
@@ -104,6 +106,18 @@ export function reducer(state: PlayerState, action: Action): PlayerState {
 
       if (!changed) return state;
 
+      /*
+       * Rating is routed through applyResult even though it is a no-op today.
+       * The archive source reports `live: false`, so the call returns the
+       * rating untouched — which is the behaviour we want to keep proving,
+       * not a branch to add later.
+       */
+      const source = opponentSource(false);
+      const rated = applyResult(state.rating, state.ratedMatches, STARTING_RATING, won > lost ? 1 : 0, {
+        enabled: false,
+        live: isRated(source),
+      });
+
       return {
         ...state,
         submissions,
@@ -111,8 +125,8 @@ export function reducer(state: PlayerState, action: Action): PlayerState {
           won: state.juryRecord.won + won,
           lost: state.juryRecord.lost + lost,
         },
-        // rating stays null — archive matches never touch it (§8).
-        rating: state.rating,
+        rating: rated.rating,
+        ratedMatches: rated.ratedMatches,
       };
     }
 
@@ -142,6 +156,9 @@ export function reducer(state: PlayerState, action: Action): PlayerState {
         ],
       };
     }
+
+    case 'SET_SETTING':
+      return { ...state, settings: { ...state.settings, [action.key]: action.value } };
 
     case 'RESET':
       return freshState();
