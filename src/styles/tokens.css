@@ -58,14 +58,53 @@
   }
 }
 
+/* Section eyebrows: EVIDENCE, THE JURY, YOU CHOSE. */
 @utility meta {
   font-family: var(--font-mono);
   font-weight: 500;
-  font-size: 10.5px;
+  font-size: 11px;
   line-height: 1;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/*
+ * Scenario prose. Half of "feels bland" on a text-heavy app is unpaced
+ * typography, not missing animation — this is the fix for that half.
+ */
+@utility prose-scenario {
+  line-height: 1.6;
+  max-width: 62ch;
+  text-wrap: pretty;
 }
 
 @utility safe-bottom {
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+/*
+ * The return hook: the only element in the app that loops indefinitely.
+ * Kept in CSS rather than JS — a compositor-driven 2s loop costs nothing for
+ * the lifetime of the app, where a raf loop would run forever.
+ */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.7;
+  }
+}
+
+@utility pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-dot {
+    animation: none;
+  }
 }

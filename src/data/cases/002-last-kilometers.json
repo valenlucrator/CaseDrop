@@ -2,13 +2,26 @@
   "id": "002",
   "slug": "last-kilometers",
   "title": "The Last Kilometers",
-  "tags": ["Employment", "Scope", "Practice"],
+  "tags": [
+    "Employment",
+    "Scope",
+    "Practice"
+  ],
+  "concepts": [
+    "course-of-employment",
+    "constructive-knowledge",
+    "material-fact",
+    "burden-of-proof"
+  ],
   "difficulty": 3,
   "estimatedMinutes": 3,
   "jurisdictionRule": "Under §12 of the Workers' Protection Act of Aldren, an injury is compensable where it is sustained in the course of employment. Work performed outside recorded hours falls within the course of employment only where the employer knew of the practice, or derived a benefit from it. A written instruction to the contrary is relevant but not decisive; the Act looks to what was actually tolerated.",
   "scenario": "Teo Ashgrove rode for Pellham Logistics on a per-parcel rate. On 14 November he finished his assigned route, logged out of the rider app at 18:42, and set off home with two parcels still in his bag.\n\nBoth addresses were on his way. He delivered the first at 18:56. Four minutes later, crossing the junction at Farrow Road toward the second, he was struck by a car turning left. He spent nine days in hospital and has not ridden since.\n\nPellham declined the claim. Their position is that Ashgrove was off shift, off the clock, and riding home — and that the handbook is unambiguous about what happens to undelivered parcels.\n\nAshgrove's position is that everybody finished their bag, that supervisors told them to, and that Pellham has never once sent a rider back to the depot for two parcels.\n\nThe second parcel was still in his bag when the ambulance arrived. It was scanned as delivered by another rider the following morning, from the depot, at a cost Pellham records internally as 4.10 credits per redelivery.",
   "question": "Should the injury be treated as work-related?",
-  "options": { "a": "Covered", "b": "Not covered" },
+  "options": {
+    "a": "Covered",
+    "b": "Not covered"
+  },
   "evidence": [
     {
       "id": "A",
@@ -17,7 +30,15 @@
       "body": "Shift started 11:03. Logged out 18:42. Two parcels remained scanned to his ID at logout. Delivery scan for parcel 1 recorded 18:56 — fourteen minutes after logout, from an account showing as off shift. Emergency call logged 19:00.",
       "favors": "neutral",
       "weight": 1,
-      "keyTerms": ["logout", "logged out", "18:42", "off shift", "timestamp", "app", "clock"]
+      "keyTerms": [
+        "logout",
+        "logged out",
+        "18:42",
+        "off shift",
+        "timestamp",
+        "app",
+        "clock"
+      ]
     },
     {
       "id": "B",
@@ -26,7 +47,17 @@
       "body": "4.1: \"Parcels not delivered by the end of your recorded shift must be returned to the depot the same evening.\"\n4.4: \"You are not covered by company insurance at any time when you are logged out of the rider app.\"\nAshgrove signed for the handbook on his first day.",
       "favors": "b",
       "weight": 2,
-      "keyTerms": ["handbook", "section", "4.1", "4.4", "signed", "written", "instruction", "return", "depot"]
+      "keyTerms": [
+        "handbook",
+        "section",
+        "4.1",
+        "4.4",
+        "signed",
+        "written",
+        "instruction",
+        "return",
+        "depot"
+      ]
     },
     {
       "id": "C",
@@ -35,7 +66,16 @@
       "body": "Supervisor (Marn): \"if you've only got one or two left just drop them and log the day tomorrow, saves everyone a trip\"\nRider: \"even after logout?\"\nSupervisor (Marn): \"nobody's counting. just get them off the van\"\nThe channel is administered by Pellham and messages are retained on company servers.",
       "favors": "a",
       "weight": 2,
-      "keyTerms": ["supervisor", "chat", "marn", "told", "instruct", "drop them", "tolerated", "knew"]
+      "keyTerms": [
+        "supervisor",
+        "chat",
+        "marn",
+        "told",
+        "instruct",
+        "drop them",
+        "tolerated",
+        "knew"
+      ]
     },
     {
       "id": "D",
@@ -44,7 +84,16 @@
       "body": "Across the Pellham fleet, 31% of all parcel delivery scans in the reporting year were recorded from rider accounts showing as logged out. The figure has risen every year since the app was introduced. Pellham's filing describes the pattern as \"rider-elected flexibility\".",
       "favors": "a",
       "weight": 2,
-      "keyTerms": ["31%", "fleet", "data", "pattern", "regulator", "aggregate", "practice", "benefit"]
+      "keyTerms": [
+        "31%",
+        "fleet",
+        "data",
+        "pattern",
+        "regulator",
+        "aggregate",
+        "practice",
+        "benefit"
+      ]
     },
     {
       "id": "E",
@@ -53,7 +102,15 @@
       "body": "\"I wanted them off my hands. If I'd taken them back to the depot I'd have had to come in Saturday to clear them, and Saturday's my daughter's thing. Both drops were on my way home anyway. Nobody made me do it.\"",
       "favors": "b",
       "weight": 1,
-      "keyTerms": ["statement", "his own", "nobody made me", "convenience", "saturday", "own choice", "personal"]
+      "keyTerms": [
+        "statement",
+        "his own",
+        "nobody made me",
+        "convenience",
+        "saturday",
+        "own choice",
+        "personal"
+      ]
     }
   ],
   "selectCount": 2,
@@ -86,5 +143,7 @@
     ],
     "reasoning": "This one does not resolve cleanly, and it is not meant to. §12 sets up a direct contest between a written rule and a tolerated practice, then tells you the writing is 'relevant but not decisive'. That instruction is doing real work: it means clause 4.4 cannot end the enquiry, but it does not tell you what beats it. The practice evidence is strong — a supervisor's instruction plus a fleet-wide 31% is about as close to institutional knowledge as you get without a policy document admitting it. Against that sits the fact that Ashgrove chose to log out, and said plainly that he finished the bag for his own convenience. Note what his motive does and does not touch: §12 asks whether the employer knew or benefited, not why the worker agreed. A player who reads his statement as fatal has quietly rewritten the test. A player who ignores it has skipped the best argument on the other side. Both sides of this are available on the evidence, which is why the community lands near 60/40 rather than 90/10."
   },
-  "simulatedSplit": { "a": 62 }
+  "simulatedSplit": {
+    "a": 62
+  }
 }

@@ -1,8 +1,13 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
+import { motion } from 'framer-motion';
+import { riseItem, staggerContainer } from '../lib/motion';
 
 /**
  * Shared screen scaffold. Top padding clears the status bar; the scroll
  * container is the flex child so the tab bar never scrolls away.
+ *
+ * The hairline is the single texture choice in the design: it fades in once
+ * the content has moved past 8px, so a scrolled screen reads as scrolled.
  */
 export function Screen({
   children,
@@ -13,8 +18,21 @@ export function Screen({
   className?: string;
   pad?: string;
 }) {
+  const [scrolled, setScrolled] = useState(false);
+
   return (
-    <div className={`flex flex-1 flex-col overflow-y-auto px-[22px] pt-[62px] ${pad} ${className}`}>
+    <div
+      onScroll={(e) => {
+        const past = e.currentTarget.scrollTop > 8;
+        if (past !== scrolled) setScrolled(past);
+      }}
+      className={`flex flex-1 flex-col overflow-y-auto px-[22px] pt-[62px] ${pad} ${className}`}
+    >
+      <div
+        aria-hidden
+        className="sticky top-0 z-10 -mx-[22px] h-px shrink-0 bg-[--color-border] transition-opacity duration-200"
+        style={{ opacity: scrolled ? 1 : 0 }}
+      />
       {children}
     </div>
   );
@@ -49,5 +67,38 @@ export function Title({ children, className = '' }: { children: ReactNode; class
     >
       {children}
     </h1>
+  );
+}
+
+// ---- stagger helpers -------------------------------------------------------
+
+export function Stagger({
+  children,
+  gap = 0.04,
+  delay = 0,
+  className = '',
+}: {
+  children: ReactNode;
+  gap?: number;
+  delay?: number;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      variants={staggerContainer(gap, delay)}
+      initial="initial"
+      animate="animate"
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function Rise({ children, className = '' }: { children: ReactNode; className?: string }) {
+  return (
+    <motion.div variants={riseItem} className={className}>
+      {children}
+    </motion.div>
   );
 }

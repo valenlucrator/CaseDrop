@@ -34,6 +34,11 @@ export interface Case {
   slug: string;
   title: string; // 'THE SECOND REFUND'
   tags: string[];
+  /**
+   * Learn entry ids this case turns on. Without this link Learn is a
+   * glossary, which is strictly worse than a search engine.
+   */
+  concepts: string[];
   difficulty: 1 | 2 | 3 | 4 | 5;
   estimatedMinutes: number;
   jurisdictionRule: string; // self-contained legal rule

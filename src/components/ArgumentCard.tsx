@@ -37,6 +37,7 @@ export function ArgumentCard({
     >
       <div className="flex items-center justify-between">
         <div className={`meta ${LABEL[tone]}`}>{label}</div>
+
         {percent !== undefined ? (
           <div className={`font-mono text-[13px] font-semibold ${tone === 'win' ? 'text-win' : 'text-text-muted'}`}>
             {percent}%

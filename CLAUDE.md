@@ -2,6 +2,13 @@
 
 Short-form legal reasoning game. Mobile web, 390×844 target.
 
+## Phase state
+
+Phase A (motion/haptics) — active.
+Phase B (accounts, rating, learn, community) — build behind flags in
+config/features.ts. Every B feature must degrade to its A behaviour when
+its flag is false. No B feature may be a hard dependency of the play loop.
+
 ## Scope contract
 
 Ship: Home, Jury, Profile. Daily case. Choose 2 of 5. Binary decision.
@@ -18,7 +25,9 @@ metric down first. "Users asked for it" is not a metric; "8 of 10 testers
 stopped at the same place" is.
 
 **The tell.** If a session ends with more files than the plan called for,
-stop and re-read this section. ~30 files is the target; 45 is the ceiling.
+stop and re-read this section. The v1 target was ~30 files; the motion pass
+and the Phase B scaffolding raised the ceiling to ~70. That ceiling moved
+because a brief asked for it, which is the only reason it may ever move.
 
 ## Flow order (do not reorder)
 
@@ -79,8 +88,50 @@ npm run build    # tsc -b && vite build
 
 ## Where the judging happens
 
-`JUDGING_DELAY_MS` in `engine/pairing.ts` is **20 seconds** while
-`LIVE_PAIRING` is false, so a watched test session can reach
-PersonalResult. Real async behaviour is 3 hours — flip `LIVE_PAIRING` in
-`engine/population.ts` or raise the constant before shipping to testers you
-are not sitting next to.
+`JUDGING_DELAY_MS` in `engine/pairing.ts` is **3 hours**. The delay is the
+return hook — the async design exists to make the player come back to
+something. To walk the whole loop in one sitting, put
+`VITE_JUDGING_DELAY_MS=20000` in `.env.local`. It is honoured only when
+`import.meta.env.DEV`, so a production build can never ship at 20 seconds.
+
+## Motion
+
+- Durations and easings live in `lib/motion.ts`. No inline durations.
+- Motion belongs in `components/motion/` and screen-level wrappers. Do not
+  scatter `motion.div` through business logic.
+- `MotionConfig reducedMotion="user"` wraps the app: opacity survives,
+  transforms drop.
+- Never pass `initial={false}` to the route `AnimatePresence`. It propagates
+  to the whole subtree and silently kills every mount-time entrance on the
+  first screen rendered.
+- The pending-result pulse is CSS (`.pulse-dot`), not JS. It is the only
+  indefinite loop in the app.
+- `haptic()` is a no-op in Safari on iOS — there is no vibration API there.
+  Visual press response carries the whole tactile channel on iPhone, so
+  every interactive element gets a press scale. Show the haptics toggle only
+  when `hapticsSupported()`.
+
+## Atmosphere — the line
+
+Allowed: 1px accent borders on active cards, the scroll hairline, paced
+typography (`prose-scenario`).
+
+Not allowed without an explicit instruction: gradients on cards, background
+patterns, parallax, confetti, particles, glow, glassmorphism, animated
+backgrounds, page-load logo animations.
+
+## Phase B rules
+
+- Flags live in `config/features.ts`, read through `useFeature()`. Never
+  read `FEATURES` directly in a component.
+- A flag can only *disable*. A gated feature (`rating`, `liveOpponents`,
+  `liveJury`) stays shut until its population gate in `engine/population.ts`
+  is met, whatever the flag or `?ff=` says.
+- Flag false must mean *exactly* Phase A behaviour, tests included.
+- Cloud sync is write-through: localStorage stays the source of truth for
+  play, and nothing in `state/sync.ts` is ever awaited on the play path.
+- Merging local and remote state derives counters from the merged
+  submissions; it never sums them. See `state/merge.ts`.
+- No jury view may resolve an argument to a player identity. The only path
+  from a juror to an argument is the `jury_queue` view in
+  `supabase/schema.sql`, which does not project `player_id`.

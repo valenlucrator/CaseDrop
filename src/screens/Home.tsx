@@ -1,14 +1,26 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { caseForDate, getCase } from '../data/cases';
 import { usePlayer } from '../state/PlayerContext';
 import { awaitingVerdict, hasPlayed, pendingResults } from '../state/reducer';
+import { haptic } from '../lib/haptics';
+import { D, E, riseItem } from '../lib/motion';
 import { PlayerCountStat } from '../components/PlayerCount';
 import { PrimaryButton } from '../components/PrimaryButton';
-import { MetaLabel, Screen } from '../components/Screen';
+import { MetaLabel, Rise, Screen, Stagger } from '../components/Screen';
+
+/**
+ * Module-scoped so it survives Home unmounting during the play flow. Without
+ * it the streak would pop on every return to Home rather than on the one
+ * occasion it changed.
+ */
+let seenStreak: number | null = null;
 
 export function Home() {
   const navigate = useNavigate();
   const { state } = usePlayer();
+  const [popStreak, setPopStreak] = useState(false);
 
   const today = caseForDate();
   const played = hasPlayed(state, today.id);
@@ -16,44 +28,70 @@ export function Home() {
   const waiting = awaitingVerdict(state);
   const recent = state.submissions.slice(0, 3);
 
+  useEffect(() => {
+    if (seenStreak !== null && state.streak > seenStreak) {
+      setPopStreak(true);
+      haptic('result');
+      const t = setTimeout(() => setPopStreak(false), D.base * 1000);
+      seenStreak = state.streak;
+      return () => clearTimeout(t);
+    }
+    seenStreak = state.streak;
+  }, [state.streak]);
+
   return (
     <Screen className="gap-[26px]">
       <div className="flex items-center justify-between">
         <div className="font-display text-[21px] leading-none font-bold tracking-[-0.035em]">
           CaseDrop
         </div>
-        <div className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-white/9 bg-surface-3 font-mono text-[11px] font-semibold text-[#a8aeb6]">
+        <motion.div
+          animate={popStreak ? { scale: [1, 1.12, 1] } : { scale: 1 }}
+          transition={{ duration: D.base, ease: E.out }}
+          className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-white/9 bg-surface-3 font-mono text-[11px] font-semibold text-[#a8aeb6]"
+        >
           {state.streak > 0 ? state.streak : '—'}
-        </div>
+        </motion.div>
       </div>
 
       {/*
         Pending result is its own entry point, not a status line. This is the
-        second way into the flow — RESULT is never reached by continuing
-        forward from a session.
+        second way into the flow — and the pulsing dot is the return hook, the
+        only element in the app allowed to loop indefinitely.
       */}
       {ready.map((s) => {
         const c = getCase(s.caseId);
         return (
-          <button
+          <motion.button
             key={s.caseId}
             type="button"
             onClick={() => navigate(`/result/${s.caseId}`)}
-            className="flex items-center justify-between rounded-[16px] border border-accent/40 bg-surface-1 p-[18px_20px] text-left transition-transform duration-100 active:scale-[0.99]"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileTap={{ scale: 0.99 }}
+            transition={{ duration: D.base, ease: E.out }}
+            className="flex items-center justify-between rounded-[16px] border border-accent/40 bg-surface-1 p-[18px_20px] text-left"
           >
             <div className="flex flex-col gap-1.5">
-              <div className="meta text-accent">VERDICT IN</div>
+              <div className="meta text-accent">Verdict in</div>
               <div className="text-[15px] font-semibold">{c?.title ?? s.caseId}</div>
             </div>
-            <span className="h-2 w-2 rounded-full bg-accent" />
-          </button>
+            <span className="pulse-dot h-2 w-2 rounded-full bg-accent" />
+          </motion.button>
         );
       })}
 
-      <div className="flex flex-col gap-5 rounded-[20px] border border-border bg-surface-1 p-[24px_22px_22px]">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: D.base, ease: E.out }}
+        className="flex flex-col gap-5 rounded-[20px] border border-border bg-surface-1 p-[24px_22px_22px]"
+      >
         <div className="flex items-center gap-2">
           <span className={`h-1.5 w-1.5 rounded-full ${played ? 'bg-text-faint' : 'bg-win'}`} />
-          <div className="meta text-text-secondary">{played ? 'PLAYED TODAY' : "TODAY'S CASE"}</div>
+          <MetaLabel className="text-text-secondary">
+            {played ? 'Played today' : "Today's case"}
+          </MetaLabel>
         </div>
 
         <div className="font-display text-[38px] leading-[0.96] font-extrabold tracking-[-0.025em] uppercase">
@@ -73,7 +111,7 @@ export function Home() {
         <PrimaryButton onClick={() => navigate(`/play/${today.id}`)}>
           {played ? 'PLAY AGAIN' : 'PLAY CASE'}
         </PrimaryButton>
-      </div>
+      </motion.div>
 
       {waiting.length > 0 && (
         <div className="rounded-[14px] border border-border bg-surface-1 px-5 py-4 text-[13.5px] leading-[1.45] text-text-secondary">
@@ -96,15 +134,18 @@ export function Home() {
       </div>
 
       {recent.length > 0 && (
-        <div className="flex flex-col gap-3.5">
-          <MetaLabel>RECENT</MetaLabel>
+        <Stagger gap={0.04} className="flex flex-col gap-3.5">
+          <Rise>
+            <MetaLabel>Recent</MetaLabel>
+          </Rise>
           <div className="flex flex-col gap-3">
             {recent.map((s, i) => {
               const c = getCase(s.caseId);
               const won = s.juryResult ? s.juryResult.yours > s.juryResult.theirs : null;
               return (
-                <div
+                <motion.div
                   key={`${s.caseId}-${s.playedAt}`}
+                  variants={riseItem}
                   className={`flex flex-col gap-[5px] ${
                     i < recent.length - 1 ? 'border-b border-white/6 pb-3' : ''
                   }`}
@@ -130,11 +171,11 @@ export function Home() {
                       </>
                     )}
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
-        </div>
+        </Stagger>
       )}
     </Screen>
   );
