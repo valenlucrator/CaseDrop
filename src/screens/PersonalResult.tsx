@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getCase } from '../data/cases';
 import { seedArguments } from '../engine/pairing';
 import { isEarly } from '../engine/population';
 import { usePlayer } from '../state/PlayerContext';
-import { submissionFor } from '../state/reducer';
+import { resultFor } from '../state/reducer';
 import { haptic } from '../lib/haptics';
 import { sound } from '../lib/sound';
 import { D, E } from '../lib/motion';
@@ -38,18 +38,22 @@ export function PersonalResult() {
   const { caseId = '' } = useParams();
   const navigate = useNavigate();
   const { state, dispatch } = usePlayer();
+  const [params] = useSearchParams();
   const [counting, setCounting] = useState(false);
 
   const c = getCase(caseId);
-  const submission = submissionFor(state, caseId);
+  // A case can be played more than once as the rotation repeats; `at` names the play.
+  const submission = resultFor(state, caseId, params.get('at'));
   const won = submission?.juryResult
     ? submission.juryResult.yours > submission.juryResult.theirs
     : null;
 
   // Opening the result is what marks it seen — that clears the Home badge.
   useEffect(() => {
-    if (submission?.status === 'judged') dispatch({ type: 'MARK_SEEN', caseId });
-  }, [submission?.status, caseId, dispatch]);
+    if (submission?.status === 'judged') {
+      dispatch({ type: 'MARK_SEEN', caseId, playedAt: submission.playedAt });
+    }
+  }, [submission?.status, submission?.playedAt, caseId, dispatch]);
 
   useEffect(() => {
     if (won === null) return;

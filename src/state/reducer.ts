@@ -16,7 +16,8 @@ export type Action =
       now?: Date;
     }
   | { type: 'JUDGE_PENDING'; now?: number }
-  | { type: 'MARK_SEEN'; caseId: string }
+  /** playedAt narrows to one play; without it every judged play of the case is cleared. */
+  | { type: 'MARK_SEEN'; caseId: string; playedAt?: string }
   | { type: 'CAST_JURY_VOTE'; caseId: string; pairKey: string; votedFor: 'a' | 'b' }
   | { type: 'SET_SETTING'; key: keyof PlayerState['settings']; value: boolean }
   | { type: 'RESET' };
@@ -40,6 +41,14 @@ export function reducer(state: PlayerState, action: Action): PlayerState {
       const today = todayKey(now);
       const c = getCase(action.caseId);
 
+      // One submission per case per day. The rotation repeats cases every few
+      // days, so this is keyed on the day, not the case — and it is the last
+      // line of defence against Back-button resubmits from the reveal.
+      if (state.submissions.some((s) => s.caseId === action.caseId && dayOf(s.playedAt) === today)) {
+        return state;
+      }
+      const firstPlay = !state.submissions.some((s) => s.caseId === action.caseId);
+
       const submission: Submission = {
         caseId: action.caseId,
         playedAt: now.toISOString(),
@@ -50,10 +59,12 @@ export function reducer(state: PlayerState, action: Action): PlayerState {
       };
 
       // Benchmark agreement only counts where the benchmark actually took a
-      // side. A genuinely split case has no right answer to agree with.
+      // side. A genuinely split case has no right answer to agree with. And
+      // only on the first play: by a rotation repeat the player has read the
+      // benchmark reasoning, so agreeing again is recall, not judgement.
       const favored = c?.benchmark.favored ?? null;
       const agreement =
-        favored === null
+        favored === null || !firstPlay
           ? state.benchmarkAgreement
           : {
               agreed: state.benchmarkAgreement.agreed + (action.choice === favored ? 1 : 0),
@@ -134,6 +145,7 @@ export function reducer(state: PlayerState, action: Action): PlayerState {
       let changed = false;
       const submissions = state.submissions.map((s) => {
         if (s.caseId !== action.caseId || s.status !== 'judged') return s;
+        if (action.playedAt !== undefined && s.playedAt !== action.playedAt) return s;
         changed = true;
         return { ...s, status: 'seen' as const };
       });
@@ -176,6 +188,28 @@ export function submissionFor(state: PlayerState, caseId: string): Submission | 
 
 export function hasPlayed(state: PlayerState, caseId: string): boolean {
   return state.submissions.some((s) => s.caseId === caseId);
+}
+
+/** Local calendar day of a play — the same key `todayKey` produces. */
+export function dayOf(playedAt: string): string {
+  return todayKey(new Date(playedAt));
+}
+
+/** The play of this case on the given local day, if there was one. */
+export function playedOn(state: PlayerState, caseId: string, date: Date = new Date()): Submission | undefined {
+  const key = todayKey(date);
+  return state.submissions.find((s) => s.caseId === caseId && dayOf(s.playedAt) === key);
+}
+
+/**
+ * Which play a result screen should show. With playedAt it is exact. Without
+ * it, an unseen verdict wins over a newer pending play — otherwise the Home
+ * "Verdict in" card opens a "with the jury" screen and its badge never clears.
+ */
+export function resultFor(state: PlayerState, caseId: string, playedAt?: string | null): Submission | undefined {
+  const plays = state.submissions.filter((s) => s.caseId === caseId);
+  if (playedAt) return plays.find((s) => s.playedAt === playedAt);
+  return plays.find((s) => s.status === 'judged') ?? plays[0];
 }
 
 /** Judged but not yet opened — this is what puts the badge on Home. */

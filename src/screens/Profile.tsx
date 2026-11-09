@@ -197,6 +197,8 @@ function Toggle({
   return (
     <Pressable
       feedback={value ? null : 'select'}
+      role="switch"
+      aria-checked={value}
       onClick={() => onChange(!value)}
       className="flex items-center justify-between rounded-[14px] border border-border bg-surface-1 p-4 text-left"
     >

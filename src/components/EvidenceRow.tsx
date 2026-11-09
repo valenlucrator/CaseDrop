@@ -25,6 +25,8 @@ export function EvidenceRow({ item, selected, lockedOut = false, shakeKey = 0, o
     <motion.button
       type="button"
       onClick={onToggle}
+      aria-pressed={selected}
+      aria-disabled={lockedOut || undefined}
       animate={controls}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: D.instant, ease: E.out }}

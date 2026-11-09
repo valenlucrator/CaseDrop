@@ -32,6 +32,15 @@ export const EMPTY_POPULATION: PopulationStats = {
   liveJury: 0,
 };
 
+/**
+ * The population count every screen shows until a backend reports a real
+ * one. There is no source for it in v1, so it is zero — which renders
+ * "You're early". It must never be derived from the local player's own
+ * activity: that is a fabricated crowd that crosses the threshold and starts
+ * printing raw numbers after a couple of weeks of solo play.
+ */
+export const KNOWN_PLAYERS_TODAY = 0;
+
 export function isEarly(count: number): boolean {
   return count < POPULATION_THRESHOLD;
 }

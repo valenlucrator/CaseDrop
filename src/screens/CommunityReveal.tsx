@@ -6,6 +6,7 @@ import { usePlay } from '../state/PlayContext';
 import { usePlayer } from '../state/PlayerContext';
 import { submissionFor } from '../state/reducer';
 import { communitySplit } from '../engine/pairing';
+import { KNOWN_PLAYERS_TODAY } from '../engine/population';
 import { haptic } from '../lib/haptics';
 import { sound } from '../lib/sound';
 import { D, E } from '../lib/motion';
@@ -55,7 +56,6 @@ export function CommunityReveal() {
   const { a: aPct, b: bPct } = communitySplit(c);
   const yours = choice === 'a' ? aPct : bPct;
   const minority = yours < 50;
-  const decisions = Math.round(state.casesCompleted * 3 + 8);
 
   return (
     <Screen pad="pb-0">
@@ -70,7 +70,7 @@ export function CommunityReveal() {
         <MetaLabel>Community</MetaLabel>
         <SplitBar label={c.options.a} percent={aPct} mine={choice === 'a'} start={revealed} />
         <SplitBar label={c.options.b} percent={bPct} mine={choice === 'b'} start={revealed} />
-        <PlayerCount count={decisions} noun="decisions" />
+        <PlayerCount count={KNOWN_PLAYERS_TODAY} noun="decisions" />
       </div>
 
       <Spacer />

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
 import { getCase } from '../data/cases';
-import { usePlay } from '../state/PlayContext';
+import { flowRedirect, usePlay } from '../state/PlayContext';
 import { usePlayer } from '../state/PlayerContext';
+import { playedOn } from '../state/reducer';
 import { wordCount } from '../engine/scoring';
 import { haptic } from '../lib/haptics';
 import { sound } from '../lib/sound';
@@ -25,7 +26,7 @@ export function Argument() {
   const { caseId = '' } = useParams();
   const navigate = useNavigate();
   const { play, playDispatch } = usePlay();
-  const { dispatch } = usePlayer();
+  const { state, dispatch } = usePlayer();
   const c = getCase(caseId);
 
   const [submitting, setSubmitting] = useState(false);
@@ -60,6 +61,11 @@ export function Argument() {
   }, []);
 
   if (!c) return <Screen>Case not found.</Screen>;
+
+  // Skipped while submitting: the submit itself creates today's play, and the
+  // reveal — not the result — is where this screen hands off.
+  const redirect = submitting ? null : flowRedirect('argument', play, c, playedOn(state, c.id));
+  if (redirect) return <Navigate to={redirect} replace />;
 
   const canSubmit =
     words > 0 && !over && play.choice !== null && play.selected.length === c.selectCount && !submitting;
@@ -97,6 +103,8 @@ export function Argument() {
           setTimeout(() => footerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 300)
         }
         spellCheck={false}
+        aria-label="Your argument"
+        aria-describedby="argument-count"
         placeholder="Write it as if the jury only reads this."
         animate={{ borderColor: over ? '#D2665F' : 'rgba(255,255,255,0.1)' }}
         transition={{ duration: D.fast }}
@@ -108,6 +116,7 @@ export function Argument() {
           The jury reads fast. So should you.
         </div>
         <motion.div
+          id="argument-count"
           animate={counter}
           className="font-mono text-[12.5px] leading-none"
           style={{ color: counterTone(words) }}

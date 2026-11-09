@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { caseForDate, getCase } from '../data/cases';
 import { usePlayer } from '../state/PlayerContext';
-import { awaitingVerdict, hasPlayed, pendingResults } from '../state/reducer';
+import { awaitingVerdict, hasPlayed, pendingResults, playedOn } from '../state/reducer';
+import { KNOWN_PLAYERS_TODAY } from '../engine/population';
 import { haptic } from '../lib/haptics';
 import { D, E, riseItem } from '../lib/motion';
 import { PlayerCountStat } from '../components/PlayerCount';
@@ -23,7 +24,14 @@ export function Home() {
   const [popStreak, setPopStreak] = useState(false);
 
   const today = caseForDate();
-  const played = hasPlayed(state, today.id);
+  // "Played" means played TODAY. The rotation brings each case back every few
+  // days, so keying this on the case alone said "Played today" on day four.
+  const playedToday = playedOn(state, today.id);
+  const earlier = !playedToday && hasPlayed(state, today.id)
+    ? state.submissions.find((s) => s.caseId === today.id)
+    : undefined;
+  const resultLink = (caseId: string, playedAt: string) =>
+    `/result/${caseId}?at=${encodeURIComponent(playedAt)}`;
   const ready = pendingResults(state);
   const waiting = awaitingVerdict(state);
   const recent = state.submissions.slice(0, 3);
@@ -63,9 +71,9 @@ export function Home() {
         const c = getCase(s.caseId);
         return (
           <motion.button
-            key={s.caseId}
+            key={`${s.caseId}-${s.playedAt}`}
             type="button"
-            onClick={() => navigate(`/result/${s.caseId}`)}
+            onClick={() => navigate(resultLink(s.caseId, s.playedAt))}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             whileTap={{ scale: 0.99 }}
@@ -88,9 +96,9 @@ export function Home() {
         className="flex flex-col gap-5 rounded-[20px] border border-border bg-surface-1 p-[24px_22px_22px]"
       >
         <div className="flex items-center gap-2">
-          <span className={`h-1.5 w-1.5 rounded-full ${played ? 'bg-text-faint' : 'bg-win'}`} />
+          <span className={`h-1.5 w-1.5 rounded-full ${playedToday ? 'bg-text-faint' : 'bg-win'}`} />
           <MetaLabel className="text-text-secondary">
-            {played ? 'Played today' : "Today's case"}
+            {playedToday ? 'Played today' : "Today's case"}
           </MetaLabel>
         </div>
 
@@ -100,17 +108,35 @@ export function Home() {
 
         <div className="text-[13.5px] leading-[1.5] text-text-secondary">{today.tags.join(' · ')}</div>
 
+        {earlier && (
+          <div className="-mt-2 text-[12.5px] leading-[1.45] text-text-muted">
+            Back in rotation — you argued this on{' '}
+            {new Date(earlier.playedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}.
+          </div>
+        )}
+
         <div className="flex gap-[22px] border-t border-border pt-1">
           <div className="flex flex-col gap-[5px] pt-3.5">
             <div className="font-mono text-[17px] leading-none">{today.estimatedMinutes} min</div>
             <div className="text-[11.5px] leading-none text-text-muted">to play</div>
           </div>
-          <PlayerCountStat count={state.casesCompleted * 3 + 8} noun="players today" />
+          <PlayerCountStat count={KNOWN_PLAYERS_TODAY} noun="players today" />
         </div>
 
-        <PrimaryButton onClick={() => navigate(`/play/${today.id}`)}>
-          {played ? 'PLAY AGAIN' : 'PLAY CASE'}
-        </PrimaryButton>
+        {/* One play per case per day: today's play opens its result, not a replay
+            the player could use to farm the record after seeing the split. */}
+        {playedToday ? (
+          <PrimaryButton
+            variant="secondary"
+            onClick={() => navigate(resultLink(today.id, playedToday.playedAt))}
+          >
+            {playedToday.status === 'pending' ? 'WITH THE JURY' : 'SEE YOUR VERDICT'}
+          </PrimaryButton>
+        ) : (
+          <PrimaryButton onClick={() => navigate(`/play/${today.id}`)}>
+            {earlier ? 'PLAY AGAIN' : 'PLAY CASE'}
+          </PrimaryButton>
+        )}
       </motion.div>
 
       {waiting.length > 0 && (

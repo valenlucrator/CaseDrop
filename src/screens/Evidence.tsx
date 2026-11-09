@@ -1,8 +1,10 @@
-import { useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { getCase } from '../data/cases';
-import { usePlay } from '../state/PlayContext';
+import { getCase, todayKey } from '../data/cases';
+import { flowRedirect, usePlay } from '../state/PlayContext';
+import { usePlayer } from '../state/PlayerContext';
+import { playedOn } from '../state/reducer';
 import { haptic } from '../lib/haptics';
 import { D, E, riseItem } from '../lib/motion';
 import { EvidenceRow } from '../components/EvidenceRow';
@@ -13,7 +15,13 @@ export function Evidence() {
   const { caseId = '' } = useParams();
   const navigate = useNavigate();
   const { play, playDispatch } = usePlay();
+  const { state } = usePlayer();
   const c = getCase(caseId);
+
+  // Idempotent for a live session; resets one left over from another case or day.
+  useEffect(() => {
+    if (c) playDispatch({ type: 'BEGIN', caseId: c.id, day: todayKey() });
+  }, [c, playDispatch]);
 
   const [shakeKeys, setShakeKeys] = useState<Record<string, number>>({});
   const [hint, setHint] = useState(false);
@@ -21,14 +29,18 @@ export function Evidence() {
 
   if (!c) return <Screen>Case not found.</Screen>;
 
+  const redirect = flowRedirect('evidence', play, c, playedOn(state, c.id));
+  if (redirect) return <Navigate to={redirect} replace />;
+
   const remaining = c.selectCount - play.selected.length;
   const done = remaining === 0;
 
   const onToggle = (id: string) => {
-    const isSelected = play.selected.includes(id);
+    // Opening is final — an open item stays open, so a second tap does nothing.
+    if (play.selected.includes(id)) return;
 
     // Silent refusal reads as a bug. Say no out loud.
-    if (!isSelected && done) {
+    if (done) {
       haptic('reject');
       setShakeKeys((k) => ({ ...k, [id]: (k[id] ?? 0) + 1 }));
       setHint(true);
@@ -38,7 +50,7 @@ export function Evidence() {
     }
 
     haptic('select');
-    playDispatch({ type: 'TOGGLE_EVIDENCE', id, max: c.selectCount });
+    playDispatch({ type: 'OPEN_EVIDENCE', id, max: c.selectCount });
   };
 
   return (
@@ -47,7 +59,7 @@ export function Evidence() {
         <div className="flex flex-col gap-[9px]">
           <Title>Evidence</Title>
           <div className="text-[13.5px] leading-none text-text-secondary">
-            Choose {c.selectCount} of {c.evidence.length}. The rest stay sealed.
+            Open {c.selectCount} of {c.evidence.length}. Once open, it stays open.
           </div>
         </div>
 

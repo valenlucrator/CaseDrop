@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getCase } from '../data/cases';
-import { usePlay } from '../state/PlayContext';
+import { flowRedirect, usePlay } from '../state/PlayContext';
+import { usePlayer } from '../state/PlayerContext';
+import { playedOn } from '../state/reducer';
 import { haptic } from '../lib/haptics';
 import { sound } from '../lib/sound';
 import { D, E, riseItem } from '../lib/motion';
@@ -28,6 +30,7 @@ export function Decision() {
   const { caseId = '' } = useParams();
   const navigate = useNavigate();
   const { play, playDispatch } = usePlay();
+  const { state } = usePlayer();
   const c = getCase(caseId);
   const [locking, setLocking] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -35,6 +38,9 @@ export function Decision() {
   useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
 
   if (!c) return <Screen>Case not found.</Screen>;
+
+  const redirect = flowRedirect('decision', play, c, playedOn(state, c.id));
+  if (redirect) return <Navigate to={redirect} replace />;
 
   const opened = c.evidence.filter((e) => play.selected.includes(e.id));
 
@@ -53,6 +59,7 @@ export function Decision() {
       <motion.button
         type="button"
         disabled={locking}
+        aria-pressed={chosen}
         onClick={() => {
           haptic('tap');
           playDispatch({ type: 'SET_CHOICE', choice: side });

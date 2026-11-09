@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
-import { getCase } from '../data/cases';
-import { usePlay } from '../state/PlayContext';
+import { getCase, todayKey } from '../data/cases';
+import { flowRedirect, usePlay } from '../state/PlayContext';
+import { usePlayer } from '../state/PlayerContext';
+import { playedOn } from '../state/reducer';
 import { D, E, riseItem } from '../lib/motion';
 import { useFeature } from '../config/features';
 import { ConceptChips } from '../components/ConceptChips';
@@ -13,15 +15,19 @@ import { MetaLabel, Rise, Screen, Spacer, Stagger, StickyFooter } from '../compo
 export function CaseIntro() {
   const { caseId = '' } = useParams();
   const navigate = useNavigate();
-  const { playDispatch } = usePlay();
+  const { play, playDispatch } = usePlay();
+  const { state } = usePlayer();
   const learn = useFeature('learn');
   const c = getCase(caseId);
 
   useEffect(() => {
-    if (c) playDispatch({ type: 'BEGIN', caseId: c.id });
+    if (c) playDispatch({ type: 'BEGIN', caseId: c.id, day: todayKey() });
   }, [c, playDispatch]);
 
   if (!c) return <Screen>Case not found.</Screen>;
+
+  const redirect = flowRedirect('intro', play, c, playedOn(state, c.id));
+  if (redirect) return <Navigate to={redirect} replace />;
 
   const paragraphs = c.scenario.split('\n\n');
 
@@ -40,7 +46,9 @@ export function CaseIntro() {
       */}
       <Stagger gap={0.04}>
         <Rise>
-          <h1 className="font-display text-[52px] leading-[0.94] font-extrabold tracking-[-0.03em] uppercase">
+          {/* 52px at the 390 target; scales down on narrower phones so the longest
+              title word ("KILOMETERS") is never clipped at 360. */}
+          <h1 className="font-display text-[length:clamp(36px,calc((100vw_-_44px)/6.6),52px)] leading-[0.94] font-extrabold tracking-[-0.03em] [overflow-wrap:anywhere] uppercase">
             {c.title}
           </h1>
         </Rise>
