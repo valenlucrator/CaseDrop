@@ -12,6 +12,14 @@ import raw003 from './003-locked-office.json';
  *   003 locked-office    lean_a
  *
  * Current: 1 lean_a · 1 lean_b · 1 split. Balanced.
+ *
+ * Launch audit (Nov 2026): 002's rule gained the journey-home / dual-purpose
+ * limb. Without it the rule's own text ("relevant but not decisive", "what
+ * was actually tolerated") answered the case for A, and "genuinely_split"
+ * was not true. Postures unchanged, so the ledger still balances.
+ *
+ * Only three cases exist, so launch week (20–27 Nov) serves each two or
+ * three times: 002 on 20/23/26, 003 on 21/24/27, 001 on 22/25.
  * Update this comment whenever a case is added. If it ever reads
  * "4 lean_a / 2 lean_b", players have learned the shortcut and the game
  * is solved.

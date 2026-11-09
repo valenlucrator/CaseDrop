@@ -17,7 +17,7 @@
   "difficulty": 2,
   "estimatedMinutes": 3,
   "jurisdictionRule": "Under §31 of the Commercial Code of Aldren, a person commits theft of mistakenly delivered property if they retain property knowing it was transferred to them in error, and fail to take reasonable steps to return it within thirty days of becoming aware of the error. An honest belief that the transfer was intended is a complete defence. The belief need not be reasonable, only genuinely held.",
-  "scenario": "Neris Halvard ordered a laptop from Corvid Supply for 1,240 credits, then returned it inside the return window. On 2 April the refund landed in her account. On 4 April it landed again.\n\nCorvid reconciles duplicate payments on a fortnightly cycle. This one slipped through: the second refund had been issued by hand by a support agent closing out a ticket, and manual entries sit outside the reconciliation batch. Nobody at Corvid looked at the account again for a month.\n\nHalvard's rent was due on 7 April. The money was gone by the 5th.\n\nOn 11 April she opened a support chat. It was a Sunday, and the desk that weekend was covered by an outsourced contractor rather than Corvid's own staff.\n\nOn 5 May — day thirty-four — Corvid's accounts department emailed her asking for the money back within seven days. She did not reply. On 20 May Corvid referred the matter to prosecutors.\n\nHalvard has no prior convictions and has not returned the money. She has never disputed that she received it twice.",
+  "scenario": "Neris Halvard ordered a laptop from Corvid Supply for 1,240 credits, then returned it inside the return window. On 2 April the refund landed in her account. On 4 April it landed again.\n\nCorvid reconciles duplicate payments on a fortnightly cycle. This one slipped through: the second refund had been issued by hand by a support agent closing out a ticket, and manual entries sit outside the reconciliation batch. Nobody at Corvid looked at the account again for a month.\n\nHalvard's rent was due on 7 April. She paid it on the 5th.\n\nOn 11 April she opened a support chat. It was a Sunday, and the desk that weekend was covered by an outsourced contractor rather than Corvid's own staff.\n\nOn 5 May — thirty-one days after the second refund — Corvid's accounts department emailed her asking for the money back within seven days. She did not reply. On 20 May Corvid referred the matter to prosecutors, who must decide by 27 May.\n\nHalvard has no prior convictions and has not returned the money. She has never disputed that she received it twice.",
   "question": "Should prosecutors bring a theft charge?",
   "options": {
     "a": "Prosecute",
@@ -45,7 +45,7 @@
       "id": "B",
       "label": "Bank Statement",
       "teaser": "Her account activity across April.",
-      "body": "Balance on 1 April: 63 credits. Both refunds land. On 5 April, 1,190 credits leave for \"HALLOW LETTINGS — RENT\". Closing balance for the month: 118 credits. No transfer out of the account is ever reversed or attempted.",
+      "body": "Balance on 1 April: 63 credits. Both refunds land. On 5 April, 1,190 credits leave for \"HALLOW LETTINGS — RENT\". Closing balance for the month: 118 credits. Corvid never attempts to reverse either refund.",
       "favors": "neutral",
       "weight": 1,
       "keyTerms": [
@@ -132,14 +132,14 @@
     "forA": [
       "The searches on 12 April show she was actively wondering whether the money was hers, which is hard to square with an honest settled belief.",
       "The 5 May demand removed any ambiguity, and she did not reply to it.",
-      "She spent the money within three days, before making any enquiry at all."
+      "She was paying rent out of the doubled balance within three days, before making any enquiry at all."
     ],
     "forB": [
       "She asked Corvid directly and was told the money was hers. §31 protects an honest belief even where it is unreasonable.",
       "Corvid's own published policy told customers no action was required and that the surplus would be clawed back automatically.",
-      "The thirty-day clock runs from awareness of the error. If her awareness dates from the 5 May email, the referral on 20 May came fifteen days in."
+      "The thirty-day clock runs from awareness of the error. If her awareness dates from the 5 May email, it runs to 4 June — after the 27 May charging decision."
     ],
-    "reasoning": "The prosecution case wants the clock to start on 4 April, or at the latest on 12 April when she searched. But §31 is written around knowledge and belief, not suspicion, and it forgives an unreasonable belief so long as it is genuine. She asked the question out loud on 11 April and was told the money was hers — by a contractor, but the statute does not ask whether her source was authoritative. Corvid's own clause 9.2 then reinforced exactly that belief. The searches cut the other way and are the strongest thing the prosecution has, but people search for reassurance as often as for escape routes. On the most defensible reading, the first moment her belief became untenable was the 5 May email, and the seven-day window it opened had not run out before Corvid went to prosecutors. That is a debt, not a theft."
+    "reasoning": "The prosecution case wants the clock to start on 4 April, or at the latest on 12 April when she searched. But §31 is written around knowledge and belief, not suspicion, and it forgives an unreasonable belief so long as it is genuine. She asked the question out loud on 11 April and was told the money was hers — by a contractor, but the statute does not ask whether her source was authoritative. Clause 9.2 works on the other element: it told customers that no action was required and that a duplicate would be recovered automatically, which makes doing nothing hard to call a failure to take reasonable steps. Notice what it does not do — it calls a duplicate Corvid's surplus, so it cannot itself be why she believed the money was hers. The searches cut the other way and are the strongest thing the prosecution has, but people search for reassurance as often as for escape routes. On the most defensible reading, her awareness of the error dates from the 5 May email, and §31's thirty days from then run to 4 June. Prosecutors decide on 27 May, before that window closes. That is a debt, not a theft — yet."
   },
   "simulatedSplit": {
     "a": 54
